@@ -1,11 +1,15 @@
-Go API Project README
+## Go API Project README
+
 This project is a simple example of how to build APIs using Go programming language. The project aims to help beginners learn how to build APIs in Go.
 
-General Prerequisites
+## General Prerequisites
+
 Go v1.16 or higher
 Git
 Text editor or IDE of your choice
-Getting Started
+
+## Getting Started
+
 To get started with one of the projects, follow these steps:
 
 Clone the repository: git clone https://github.com/<your-username>/<your-repo-name>.git
