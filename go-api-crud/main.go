@@ -86,10 +86,10 @@ func main() {
 	movies = append(movies, Movie{ ID: "1", Isbn: "123456", Title: "First Movie", Director : &Director{FirstName: "fabio", LastName: "dc"} })
 	movies = append(movies, Movie{ ID: "2", Isbn: "78910", Title: "Second Movie", Director : &Director{FirstName: "fabio", LastName: "dc"} })
 	r.HandleFunc("/movies", getMovies).Methods("GET")
-	r.HandleFunc("/movies/(id)", getMovie).Methods("GET")
+	r.HandleFunc("/movies/{id}", getMovie).Methods("GET")
 	r.HandleFunc("/movies", createMovie).Methods("POST")
-	r.HandleFunc("/movies/(id)", updateMovie).Methods("PUT")
-	r.HandleFunc("/movies/(id)", deleteMovie).Methods("DELETE")
+	r.HandleFunc("/movies/{id}", updateMovie).Methods("PUT")
+	r.HandleFunc("/movies/{id}", deleteMovie).Methods("DELETE")
 
 	fmt.Print("Starting server at port 8000")
 	log.Fatal(http.ListenAndServe(":8000", r))
