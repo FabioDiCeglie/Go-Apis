@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
-// "math/rand"
-// "strconv"
+
 
 type Movie struct{
 	ID string `json:"id"`
@@ -42,7 +43,13 @@ func getMovie(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func createMovie(){
+func createMovie(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
+	var movie Movie
+	_ = json.NewDecoder(r.Body).Decode(&movie)
+	movie.ID = strconv.Itoa(rand.Intn(100000007))
+	movies = append(movies, movie)
+	json.NewEncoder(w).Encode(movie)
 }
 
 func updateMovie(){
