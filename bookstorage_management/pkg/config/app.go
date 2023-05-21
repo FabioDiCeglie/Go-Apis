@@ -11,7 +11,8 @@ var (
 )
 
 func Connect(){
-	d, err := gorm.Open("mysql", "akhil:Axlesharma@12@/simplerest?charset=utf8&parseTime=True&loc=Local")
+	dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
+	d, err := gorm.Open(dsn)
 	if err != nil{
 		panic(err)
 	}
