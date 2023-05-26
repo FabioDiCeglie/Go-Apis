@@ -6,19 +6,18 @@ import (
 )
 
 var (
-
-	db * gorm.DB
+	db *gorm.DB
 )
 
-func Connect(){
-	dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
-	d, err := gorm.Open(dsn)
-	if err != nil{
+func Connect() {
+	dsn := "host=mouse.db.elephantsql.com user=ydgmnplr password=jMKkqF5eKoRj5MrTnJRAw6zpXGGQPMcn dbname=ydgmnplr port=5432"
+	d, err := gorm.Open("postgres", dsn)
+	if err != nil {
 		panic(err)
 	}
 	db = d
 }
 
-func GetDB() *gorm.DB{
+func GetDB() *gorm.DB {
 	return db
 }
