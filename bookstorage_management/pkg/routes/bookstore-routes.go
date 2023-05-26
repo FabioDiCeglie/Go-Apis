@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/FabioDiCeglie/Learning-Go/tree/main/bookstorage_management/pkg/controllers"
+	"github.com/FabioDiCeglie/Learning-Go/pkg/controllers"
 	"github.com/gorilla/mux"
 )
 
