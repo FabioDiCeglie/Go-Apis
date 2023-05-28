@@ -12,8 +12,8 @@ Text editor or IDE of your choice
 
 To get started with one of the projects, follow these steps:
 
-Clone the repository: git clone https://github.com/<your-username>/<your-repo-name>.git
-Change directory to the project root and the project you want to check: cd <your-repo-name> && cd <project-name>
-Install dependencies: go mod download
-Run the server: go run main.go
-You should now have the API server running locally. You can test the API by making HTTP requests using tools like curl or Postman.
+1. Clone the repository: `git clone`
+2. Change directory to the project root and the project you want to check: `cd <your-repo-name>` && `cd <project-name>`
+3. Install dependencies: go mod download
+4. Run the server: go run main.go
+5. You should now have the API server running locally. You can test the API by making HTTP requests using tools like curl or Postman.
