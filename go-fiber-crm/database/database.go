@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	db *gorm.DB
+	Db *gorm.DB
 )
 
 func Connect() {
@@ -19,15 +19,15 @@ func Connect() {
 		panic(err)
 	}
 	fmt.Println("Connection opened to database")
-	db = d
+	Db = d
 }
 
 // func GetDB() *gorm.DB {
 // 	return db
 // }
 
-func initDatabase() {
+func InitDatabase() {
 	Connect()
-	db.AutoMigrate(&controllers.Lead{})
+	Db.AutoMigrate(&controllers.Lead{})
 	fmt.Println("Database Migrated")
 }
