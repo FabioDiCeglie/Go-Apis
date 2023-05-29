@@ -36,6 +36,23 @@ func NewLead(c *fiber.Ctx) {
 	c.JSON(lead)
 }
 
+func UpdateLead(c *fiber.Ctx) {
+	id := c.Params("id")
+	db := database.Db
+	var lead database.Lead
+	db.Find(&lead, id)
+	if lead.Name == "" {
+		c.Status(500).Send("No lead found with ID")
+		return
+	}
+	if err := c.BodyParser(&lead); err != nil {
+		c.Status(503).Send(err)
+		return
+	}
+	db.Model(&lead).Updates(&lead)
+	c.JSON(lead)
+}
+
 func DeleteLead(c *fiber.Ctx) {
 	id := c.Params("id")
 	db := database.Db
