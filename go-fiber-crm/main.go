@@ -10,7 +10,7 @@ import (
 
 func main() {
 	app := fiber.New()
-	database.initDatabase()
+	database.InitDatabase()
 	routes.SetUpRoutes(app)
 	app.Listen(3000)
 	fmt.Println("Starting server to http://localhost:3000")
