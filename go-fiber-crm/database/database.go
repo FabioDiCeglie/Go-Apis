@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 
+	"github.com/fabio/go-fiber/controllers"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -21,6 +22,12 @@ func Connect() {
 	db = d
 }
 
-func GetDB() *gorm.DB {
-	return db
+// func GetDB() *gorm.DB {
+// 	return db
+// }
+
+func initDatabase() {
+	Connect()
+	db.AutoMigrate(&controllers.Lead{})
+	fmt.Println("Database Migrated")
 }
