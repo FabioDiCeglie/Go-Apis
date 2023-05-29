@@ -1,9 +1,8 @@
-package config
+package database
 
 import (
 	"fmt"
 
-	"github.com/fabio/go-fiber/controllers"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -11,6 +10,14 @@ import (
 var (
 	Db *gorm.DB
 )
+
+type Lead struct {
+	gorm.Model
+	Name    string `json:"name"`
+	Company string `json:"company"`
+	Email   string `json:"email"`
+	Phone   int    `json:"phone"`
+}
 
 func Connect() {
 	dsn := "host=mouse.db.elephantsql.com user=ydgmnplr password=jMKkqF5eKoRj5MrTnJRAw6zpXGGQPMcn dbname=ydgmnplr port=5432"
@@ -28,6 +35,6 @@ func Connect() {
 
 func InitDatabase() {
 	Connect()
-	Db.AutoMigrate(&controllers.Lead{})
+	Db.AutoMigrate(&Lead{})
 	fmt.Println("Database Migrated")
 }

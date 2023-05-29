@@ -12,7 +12,7 @@ func main() {
 	app := fiber.New()
 	database.InitDatabase()
 	routes.SetUpRoutes(app)
-	app.Listen(3000)
 	fmt.Println("Starting server to http://localhost:3000")
-	defer database.DBConn.Close()
+	app.Listen(3000)
+	defer database.Db.Close()
 }
