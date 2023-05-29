@@ -29,10 +29,6 @@ func Connect() {
 	Db = d
 }
 
-// func GetDB() *gorm.DB {
-// 	return db
-// }
-
 func InitDatabase() {
 	Connect()
 	Db.AutoMigrate(&Lead{})
