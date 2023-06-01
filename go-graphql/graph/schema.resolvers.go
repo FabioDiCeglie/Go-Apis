@@ -8,18 +8,35 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/fabio/graphql/database"
 	"github.com/fabio/graphql/graph/model"
 )
 
 // CreateLink is the resolver for the createLink field.
 func (r *mutationResolver) CreateLink(ctx context.Context, input model.NewLink) (*model.Link, error) {
-	var link model.Link
-	var user model.User
-	link.Address = input.Address
-	link.Title = input.Title
-	user.Name = "test"
-	link.User = &user
-	return &link, nil
+	db := database.Db
+
+	// Create a new link
+	link := &model.Link{
+		Address: input.Address,
+		Title:   input.Title,
+	}
+
+	// // Get the user from the database
+	// var user model.User
+	// if err := db.First(&user).Error; err != nil {
+	// 	return nil, err
+	// }
+
+	// // Associate the user with the link
+	// link.User = &user
+
+	// Save the link to the database
+	if err := db.Create(&link).Error; err != nil {
+		return nil, err
+	}
+
+	return link, nil
 }
 
 // CreateUser is the resolver for the createUser field.
