@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 
+	"github.com/fabio/graphql/graph/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -10,18 +11,6 @@ import (
 var (
 	Db *gorm.DB
 )
-
-type User struct {
-	gorm.Model
-	Name string `json:"name"`
-}
-
-type Link struct {
-	gorm.Model
-	Title   string `json:"title"`
-	Address string `json:"address"`
-	User    *User
-}
 
 func Connect() {
 	dsn := "host=mouse.db.elephantsql.com user=ydgmnplr password=jMKkqF5eKoRj5MrTnJRAw6zpXGGQPMcn dbname=ydgmnplr port=5432"
@@ -35,7 +24,7 @@ func Connect() {
 
 func InitDB() {
 	Connect()
-	Db.AutoMigrate(&Link{})
+	Db.AutoMigrate(&model.Link{}, &model.User{})
 	fmt.Println("Database Migrated")
 }
 
