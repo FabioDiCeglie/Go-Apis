@@ -23,7 +23,7 @@ func main() {
 
 	router := chi.NewRouter()
 
-	router.Use(auth.Middleware())
+	router.Use(auth.Middleware)
 
 	database.InitDB()
 	defer database.CloseDB()

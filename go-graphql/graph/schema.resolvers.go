@@ -75,7 +75,7 @@ func (r *mutationResolver) Login(ctx context.Context, input model.Login) (string
 	db := database.Db
 
 	var foundUser model.User
-	if err := db.Where("Username = ?", input.Username).First(&foundUser).Error; err != nil {
+	if err := db.Where("Name = ?", input.Username).First(&foundUser).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			// 1: Change the return statement to return an error instead of an empty string
 			return "", errors.New("wrong username or password")
