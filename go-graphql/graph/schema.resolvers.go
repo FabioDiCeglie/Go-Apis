@@ -7,9 +7,11 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/fabio/graphql/database"
 	"github.com/fabio/graphql/graph/model"
+	"github.com/fabio/graphql/pkg/jwt"
 )
 
 // CreateLink is the resolver for the createLink field.
@@ -41,7 +43,30 @@ func (r *mutationResolver) CreateLink(ctx context.Context, input model.NewLink) 
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (string, error) {
-	panic(fmt.Errorf("not implemented: CreateUser - createUser"))
+	db := database.Db
+
+	hashedPassword, err := jwt.HashPassword(input.Password)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create a new user
+	user := &model.User{
+		Name:     input.Username,
+		Password: hashedPassword,
+	}
+
+	// Save the user to the database
+	if err := db.Create(&user).Error; err != nil {
+		return "", err
+	}
+
+	token, err := jwt.GenerateToken(user.Name)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 // Login is the resolver for the login field.
