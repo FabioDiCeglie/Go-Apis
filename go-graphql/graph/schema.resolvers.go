@@ -6,12 +6,14 @@ package graph
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 
 	"github.com/fabio/graphql/database"
 	"github.com/fabio/graphql/graph/model"
 	"github.com/fabio/graphql/pkg/jwt"
+	"github.com/jinzhu/gorm"
 )
 
 // CreateLink is the resolver for the createLink field.
@@ -69,9 +71,31 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	return token, nil
 }
 
-// Login is the resolver for the login field.
 func (r *mutationResolver) Login(ctx context.Context, input model.Login) (string, error) {
-	panic(fmt.Errorf("not implemented: Login - login"))
+	db := database.Db
+
+	var foundUser model.User
+	if err := db.Where("Username = ?", input.Username).First(&foundUser).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			// 1: Change the return statement to return an error instead of an empty string
+			return "", errors.New("wrong username or password")
+		} else {
+			// 2: Instead of using log.Fatal, return the error to the caller
+			return "", err
+		}
+	}
+
+	correct := jwt.CheckPasswordHash(input.Password, foundUser.Password)
+	if !correct {
+		return "", errors.New("wrong username or password")
+	}
+
+	token, err := jwt.GenerateToken(foundUser.Name)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 // RefreshToken is the resolver for the refreshToken field.
