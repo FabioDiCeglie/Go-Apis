@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/fabio/graphql/graph/model"
 	"github.com/fabio/graphql/pkg/jwt"
 )
 
@@ -41,7 +42,7 @@ func Middleware(next http.Handler) http.Handler {
 }
 
 // ForContext finds the user from the context. REQUIRES Middleware to have run.
-// func ForContext(ctx context.Context) *model.User {
-// 	raw, _ := ctx.Value(tokenCtxKey).(*model.User)
-// 	return raw
-// }
+func ForContext(ctx context.Context) *model.User {
+	raw, _ := ctx.Value(tokenCtxKey).(*model.User)
+	return raw
+}
