@@ -7,32 +7,36 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/fabio/graphql/database"
 	"github.com/fabio/graphql/graph/model"
+	"github.com/fabio/graphql/pkg/auth"
 	"github.com/fabio/graphql/pkg/jwt"
 	"github.com/jinzhu/gorm"
 )
 
 // CreateLink is the resolver for the createLink field.
 func (r *mutationResolver) CreateLink(ctx context.Context, input model.NewLink) (*model.Link, error) {
+	user := auth.ForContext(ctx)
+	if user == nil {
+		return &model.Link{}, fmt.Errorf("access denied")
+	}
+
 	db := database.Db
+
+	graphqlUser := &model.User{
+		ID:   user.ID,
+		Name: user.Name,
+	}
 
 	// Create a new link
 	link := &model.Link{
 		Address: input.Address,
 		Title:   input.Title,
+		User:    graphqlUser,
 	}
-
-	// // Get the user from the database
-	// var user model.User
-	// if err := db.First(&user).Error; err != nil {
-	// 	return nil, err
-	// }
-
-	// // Associate the user with the link
-	// link.User = &user
 
 	// Save the link to the database
 	if err := db.Create(&link).Error; err != nil {
