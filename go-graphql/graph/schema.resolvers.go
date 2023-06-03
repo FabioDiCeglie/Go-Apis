@@ -14,12 +14,21 @@ import (
 	"github.com/fabio/graphql/graph/model"
 	"github.com/fabio/graphql/pkg/auth"
 	"github.com/fabio/graphql/pkg/jwt"
+	"github.com/fabio/graphql/pkg/utils"
+
 	"github.com/jinzhu/gorm"
 )
 
+type contextKey struct {
+	name string
+}
+
+var userCtxKey = &contextKey{"user"}
+
 // CreateLink is the resolver for the createLink field.
 func (r *mutationResolver) CreateLink(ctx context.Context, input model.NewLink) (*model.Link, error) {
-	user := auth.ForContext(ctx)
+
+	user := auth.FindUser(ctx)
 	if user == nil {
 		return &model.Link{}, fmt.Errorf("access denied")
 	}
@@ -50,7 +59,7 @@ func (r *mutationResolver) CreateLink(ctx context.Context, input model.NewLink) 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (string, error) {
 	db := database.Db
 
-	hashedPassword, err := jwt.HashPassword(input.Password)
+	hashedPassword, err := utils.HashPassword(input.Password)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -87,7 +96,7 @@ func (r *mutationResolver) Login(ctx context.Context, input model.Login) (string
 		}
 	}
 
-	correct := jwt.CheckPasswordHash(input.Password, foundUser.Password)
+	correct := utils.CheckPasswordHash(input.Password, foundUser.Password)
 	if !correct {
 		return "", errors.New("wrong username or password")
 	}

@@ -11,3 +11,15 @@ Steps:
 
 4. Now run the following command to regenerate files;
     `go run github.com/99designs/gqlgen generate`
+
+
+Test server:
+
+1. Clone repository
+    `git clone <SSH>`
+
+2. Install relative package  
+    `git mod tidy`
+
+3. Start server
+    `go run server.go`

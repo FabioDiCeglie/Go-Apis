@@ -2,14 +2,12 @@ package auth
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"strconv"
 
-	"github.com/fabio/graphql/database"
 	"github.com/fabio/graphql/graph/model"
 	"github.com/fabio/graphql/pkg/jwt"
-	"github.com/jinzhu/gorm"
+	"github.com/fabio/graphql/pkg/utils"
 )
 
 type contextKey struct {
@@ -38,11 +36,12 @@ func Middleware(next http.Handler) http.Handler {
 
 		// create user and check if user exists in db
 		user := model.User{Name: username}
-		id, err := GetUserIdByUsername(username)
+		id, err := utils.GetUserIdByUsername(username)
 		if err != nil {
 			next.ServeHTTP(w, r)
 			return
 		}
+
 		user.ID = strconv.Itoa(id)
 		// put it in context
 		ctx := context.WithValue(r.Context(), userCtxKey, &user)
@@ -53,28 +52,8 @@ func Middleware(next http.Handler) http.Handler {
 	})
 }
 
-// ForContext finds the user from the context. REQUIRES Middleware to have run.
-func ForContext(ctx context.Context) *model.User {
+// Finds the user from the context. REQUIRES Middleware to have run.
+func FindUser(ctx context.Context) *model.User {
 	raw, _ := ctx.Value(userCtxKey).(*model.User)
 	return raw
-}
-
-// GetUserIdByUsername checks if a user exists in the database by the given username
-func GetUserIdByUsername(username string) (int, error) {
-	db := database.Db
-	var user model.User
-	if err := db.Where("Name = ?", username).First(&user).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			log.Print("No user found with name: ", username)
-			return 0, nil
-		}
-		return 0, err
-	}
-
-	num, err := strconv.Atoi(user.ID)
-	if err != nil {
-		return 0, err
-	}
-
-	return num, nil
 }
