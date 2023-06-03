@@ -24,10 +24,6 @@ type NewUser struct {
 	Password string `json:"password"`
 }
 
-type RefreshTokenInput struct {
-	Token string `json:"token"`
-}
-
 type User struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
