@@ -25,3 +25,29 @@ func GetEmployees(c *fiber.Ctx) {
 
 	return c.JSON(employees)
 }
+
+func CreateEmployee(c *fiber.Ctx) {
+	collection := database.Mg.Db.Collection("employees")
+
+	employee := new(models.Employee)
+
+	if err := c.BodyParser(employee); err != nil {
+		return c.Status(400).SendString(err.Error())
+	}
+
+	employee.ID = ""
+
+	insertionResult, err := collection.InsertOne(c.Context(), employee)
+
+	if err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	filter := bson.D{{Key: "_id", Value: insertionResult.InsertedID}}
+	createdRecord := collection.FindOne(c.Context(), filter)
+
+	createdEmployee := &models.Employee{}
+	createdRecord.Decode(createdEmployee)
+
+	return c.Status(201).JSON(createdEmployee)
+}
