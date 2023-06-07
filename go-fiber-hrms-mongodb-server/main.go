@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/fabio/go-fiber-mongo/database"
-	"github.com/fabio/go-fiber/routes"
+	"github.com/fabio/go-fiber-mongo/routes"
 	"github.com/gofiber/fiber"
 )
 
