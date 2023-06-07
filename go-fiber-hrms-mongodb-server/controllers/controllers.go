@@ -9,7 +9,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-func GetEmployees(c *fiber.Ctx) error {
+func GetEmployees(c *fiber.Ctx) {
 	query := bson.D{{}}
 
 	cursor, err := database.Mg.Db.Collection("employees").Find(c.Context(), query)
