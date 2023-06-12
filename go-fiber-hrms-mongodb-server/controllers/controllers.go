@@ -12,7 +12,7 @@ import (
 )
 
 func GetEmployees(c *fiber.Ctx) {
-	query := bson.M{}
+	query := bson.D{}
 
 	cursor, err := database.Mg.Db.Collection("employees").Find(c.Context(), query)
 	if err != nil {
@@ -47,12 +47,14 @@ func UpdateEmployee(c *fiber.Ctx) {
 		return
 	}
 
-	query := bson.M{Key: "_id", Value: employeeID}
-	update := bson.M{
-		"$set": bson.M{
-			"name":   employee.Name,
-			"age":    employee.Age,
-			"salary": employee.Salary,
+	query := bson.D{bson.E{Key: "_id", Value: employeeID}}
+	update := bson.D{
+		bson.E{Key: "$set",
+			Value: bson.D{
+				bson.E{Key: "name", Value: employee.Name},
+				bson.E{Key: "age", Value: employee.Age},
+				bson.E{Key: "salary", Value: employee.Salary},
+			},
 		},
 	}
 
@@ -91,7 +93,7 @@ func CreateEmployee(c *fiber.Ctx) {
 		return
 	}
 
-	filter := bson.M{Key: "_id", Value: insertionResult.InsertedID}
+	filter := bson.D{bson.E{Key: "_id", Value: insertionResult.InsertedID}}
 	createdRecord := collection.FindOne(c.Context(), filter)
 
 	createdEmployee := &models.Employee{}
@@ -108,7 +110,7 @@ func DeleteEmployee(c *fiber.Ctx) {
 		return
 	}
 
-	query := bson.M{Key: "_id", Value: employeeID}
+	query := bson.D{bson.E{Key: "_id", Value: employeeID}}
 	result, err := database.Mg.Db.Collection("employees").DeleteOne(c.Context(), &query)
 
 	if err != nil {
