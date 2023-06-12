@@ -12,7 +12,7 @@ import (
 )
 
 func GetEmployees(c *fiber.Ctx) {
-	query := bson.D{}
+	query := bson.D{bson.E{}}
 
 	cursor, err := database.Mg.Db.Collection("employees").Find(c.Context(), query)
 	if err != nil {

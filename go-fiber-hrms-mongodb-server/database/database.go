@@ -28,8 +28,6 @@ type MongoInstance struct {
 
 var Mg MongoInstance
 
-var mongoURI = os.Getenv("MONGO_URL")
-
 func Connect() error {
 	client, err := mongo.NewClient(options.Client().ApplyURI(os.Getenv("MONGO_URL")))
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
