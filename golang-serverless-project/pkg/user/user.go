@@ -10,4 +10,4 @@ func CreateUser() {}
 
 func UpdateUser() {}
 
-func DeleteUser() {}
+func DeleteUser() error {}
