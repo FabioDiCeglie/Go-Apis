@@ -68,7 +68,14 @@ func FetchUsers(tableName string, dynaClient dynamodbiface.DynamoDBAPI)(*User, e
 
 }
 
-func CreateUser() {}
+func CreateUser(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
+	*User,
+	error,
+){
+	var u User
+
+	
+}
 
 func UpdateUser() {}
 

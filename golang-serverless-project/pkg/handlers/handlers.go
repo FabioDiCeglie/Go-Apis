@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -38,6 +39,11 @@ func GetUser(req events.APIGatewayProxyRequest, tableName string, dynaClient dyn
 func CreateUser(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
 	*events.APIGatewayProxyResponse, error,
 ) {
+	result, err := user.CreateUser(req, tableName, dynaClient)
+	if err != nil {
+		return apiResponse(http.StatusBadRequest, ErrorBody(aws.String(err.Error())))
+	}
+	return apiResponse(http.StatusOK, result)
 }
 
 func UpdateUser(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
@@ -52,4 +58,13 @@ func DeleteUser(req events.APIGatewayProxyRequest, tableName string, dynaClient 
 
 func UnhandleMethod() (*events.APIGatewayProxyResponse, error) {
 	return apiResponse(http.StatusMethodNotAllowed, ErrorMethodNotAllowed)
+}
+
+func apiResponse(status int, body interface{}) (*events.APIGatewayProxyResponse, error) {
+	resp := events.APIGatewayProxyResponse{Headers: map[string]string{"Content-Type": "application/json"}}
+	resp.StatusCode = status
+
+	stringBody, _ := json.Marshal(body)
+	resp.Body = string(stringBody)
+	return &resp, nil
 }
