@@ -45,6 +45,7 @@ func FetchUser(email, tableName string, dynaClient dynamodbiface.DynamoDBAPI)(*U
 	}
 
 	item := new(User)
+	// we unmarshal and brought into item here
 	err = dynamodbattribute.UnmarshalMap(res.item, item)
 	if err != nil {
 		return nil, errors.New(ErrorFailedToUnmarshalRecord)
