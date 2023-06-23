@@ -19,6 +19,7 @@ func GetUser(req events.APIGatewayProxyRequest, tableName string, dynaClient dyn
 	*events.APIGatewayProxyResponse, error,
 ) {
 	email := req.QueryStringParameters["email"]
+
 	if len(email) > 0 {
 		result, err := user.FetchUser(email, tableName, dynaClient)
 		if err != nil {
