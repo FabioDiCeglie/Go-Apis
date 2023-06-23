@@ -23,19 +23,11 @@ func GetUser(req events.APIGatewayProxyRequest, tableName string, dynaClient dyn
 	email := req.QueryStringParameters["email"]
 	if len(email) > 0 {
 		result, err := user.FetchUser(email, tableName, dynaClient)
-		if err != nil {
-			return apiResponse(http.StatusBadRequest, ErrorBody{aws.String(err.Error())})
-		}
-		return apiResponse(http.StatusOK, result)
+		return handlerResponse(err, result, http.StatusOK)
 	}
 
 	result, err := user.FetchUsers(tableName, dynaClient)
-	if err != nil {
-		return apiResponse(http.StatusBadRequest, ErrorBody{
-			aws.String(err.Error()),
-		})
-	}
-	return apiResponse(http.StatusOK, result)
+	return handlerResponse(err, result, http.StatusOK)
 
 }
 
@@ -43,24 +35,14 @@ func CreateUser(req events.APIGatewayProxyRequest, tableName string, dynaClient 
 	*events.APIGatewayProxyResponse, error,
 ) {
 	result, err := user.CreateUser(req, tableName, dynaClient)
-	if err != nil {
-		return apiResponse(http.StatusBadRequest, ErrorBody{
-			aws.String(err.Error()),
-		})
-	}
-	return apiResponse(http.StatusCreated, result)
+	return handlerResponse(err, result, http.StatusCreated)
 }
 
 func UpdateUser(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
 	*events.APIGatewayProxyResponse, error,
 ) {
 	result, err := user.UpdateUser(req, tableName, dynaClient)
-	if err != nil {
-		return apiResponse(http.StatusBadRequest, ErrorBody{
-			aws.String(err.Error()),
-		})
-	}
-	return apiResponse(http.StatusOK, result)
+	return handlerResponse(err, result, http.StatusOK)
 }
 
 func DeleteUser(req events.APIGatewayProxyRequest, tableName string, dynaClient dynamodbiface.DynamoDBAPI) (
@@ -87,4 +69,14 @@ func apiResponse(status int, body interface{}) (*events.APIGatewayProxyResponse,
 	stringBody, _ := json.Marshal(body)
 	resp.Body = string(stringBody)
 	return &resp, nil
+}
+
+func handlerResponse(err error, result *events.APIGatewayProxyResponse, httpS int) (*events.APIGatewayProxyResponse, error) {
+	if err != nil {
+		return apiResponse(http.StatusBadRequest, ErrorBody{
+			aws.String(err.Error()),
+		})
+	}
+	return apiResponse(httpS, result)
+
 }
