@@ -71,7 +71,7 @@ func apiResponse(status int, body interface{}) (*events.APIGatewayProxyResponse,
 	return &resp, nil
 }
 
-func handlerResponse(err error, result *events.APIGatewayProxyResponse, httpSt int) (*events.APIGatewayProxyResponse, error) {
+func handlerResponse(err error, result *user.User, httpSt int) (*events.APIGatewayProxyResponse, error) {
 	if err != nil {
 		return apiResponse(http.StatusBadRequest, ErrorBody{
 			aws.String(err.Error()),
